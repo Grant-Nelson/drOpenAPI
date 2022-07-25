@@ -2,35 +2,58 @@ package reader
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io/ioutil"
+	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/grant-nelson/DrOpenAPI/internal/definition/headers"
-	"github.com/grant-nelson/DrOpenAPI/internal/definition/source/factory"
+	"github.com/grant-nelson/DrOpenAPI/internal/api"
+	"github.com/grant-nelson/DrOpenAPI/internal/api/src/factory"
 )
 
 type unmarshalHandle func(in []byte, out interface{}) error
 
-func ReadYaml(path string) headers.OpenAPI {
-	return read(path, yaml.Unmarshal)
+func Read(path, fileType string) api.OpenAPI {
+	if len(path) == 0 {
+		panic(errors.New(`must provide a non-empty input file path`))
+	}
+
+	unmarshal := getUnmarshalHandler(path, fileType)
+	raw := readRaw(path, unmarshal)
+	return factory.New().OpenAPI(raw)
 }
 
-func ReadJson(path string) headers.OpenAPI {
-	return read(path, json.Unmarshal)
+func getUnmarshalHandler(path, fileType string) unmarshalHandle {
+	if len(fileType) == 0 {
+		ext := filepath.Ext(fileType)
+		if len(ext) == 0 {
+			fileType = `yaml`
+		} else {
+			fileType = ext[1:]
+		}
+	}
+
+	fileType = strings.ToLower(fileType)
+	switch fileType {
+	case `json`:
+		return json.Unmarshal
+	case `yaml`:
+		return yaml.Unmarshal
+	default:
+		panic(fmt.Errorf(`unexpected file type: %q`, fileType))
+	}
 }
 
-func read(path string, unmarshal unmarshalHandle) headers.OpenAPI {
-	return factory.New().OpenAPI(readRaw(path, unmarshal))
-}
-
-func readRaw(path string, unmarshal unmarshalHandle) headers.Raw {
+func readRaw(path string, unmarshal unmarshalHandle) api.Raw {
 	file, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
 
-	data := headers.Raw{}
+	data := api.Raw{}
 	err = unmarshal(file, &data)
 	if err != nil {
 		panic(err)

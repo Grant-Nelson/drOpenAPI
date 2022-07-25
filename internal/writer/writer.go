@@ -1,18 +1,22 @@
 package writer
 
 import (
+	"errors"
 	"os"
 	"strings"
 
-	"github.com/grant-nelson/DrOpenAPI/internal/definition/headers"
-	"github.com/grant-nelson/DrOpenAPI/internal/definition/headers/schemaType"
-	"github.com/grant-nelson/DrOpenAPI/internal/writer/markdown"
-	"github.com/grant-nelson/DrOpenAPI/internal/writer/mermaid"
+	"github.com/grant-nelson/DrOpenAPI/internal/api"
+	"github.com/grant-nelson/DrOpenAPI/internal/api/enums/schemaType"
+	"github.com/grant-nelson/DrOpenAPI/internal/markdown"
+	"github.com/grant-nelson/DrOpenAPI/internal/markdown/src/factory"
 )
 
-func Write(outputPath string, openAPI headers.OpenAPI) {
-	md := markdown.New()
-	md.SetTitle(`Content API Models`)
+func Write(outputPath, title string, openAPI api.OpenAPI) {
+	if len(outputPath) == 0 {
+		panic(errors.New(`must provide a non-empty output file path`))
+	}
+
+	md := factory.New().Markdown(title)
 
 	for _, path := range openAPI.Paths() {
 		item := openAPI.PathItem(path)
@@ -28,28 +32,33 @@ func Write(outputPath string, openAPI headers.OpenAPI) {
 	}
 }
 
-func addOperation(md markdown.Markdown, path string, op headers.Operation) {
+func addOperation(md markdown.Markdown, path string, op api.Operation) {
 	if res := op.Response(`200`); res != nil {
 		if schema := res.Content(`application/json`); schema != nil {
 
-			md.AddSection(op.OperationId())
-			md.Bold(`Summary:`).Plain(` ` + op.Summary())
-			md.NewPar()
-			md.Bold(`Path:`).Plain(` ` + path).LineBreak()
-			md.Bold(`Operation:`).Plain(` ` + strings.ToUpper(string(op.OpType()))).LineBreak()
-			md.Bold(`Tags:`).Plain(` ` + strings.Join(op.Tags(), `, `))
-			md.NewPar()
-			md.Bold(`Description:`).Plain(` ` + op.Description())
+			md.Section(op.OperationId())
+
+			par1 := md.Par()
+			if len(op.Summary()) > 0 {
+				par1.Bold(`Summary:`).Write(` %s`, op.Summary()).LineBreak()
+			}
+			if len(op.Description()) > 0 {
+				par1.Bold(`Description:`).Write(` %s`, op.Description())
+			}
+
+			md.Par().
+				Bold(`Path:`).Write(` `).Code(path).LineBreak().
+				Bold(`Operation:`).Write(` `).Code(strings.ToUpper(string(op.OpType()))).LineBreak().
+				Bold(`Tags:`).Write(` `).Code(strings.Join(op.Tags(), `, `))
 
 			diagramOp(md, schema)
 		}
 	}
 }
 
-func diagramOp(md markdown.Markdown, schema headers.Schema) {
-	dia := mermaid.New()
-
-	classesToAdd := []headers.Schema{schema}
+func diagramOp(md markdown.Markdown, schema api.Schema) {
+	dia := md.Mermaid()
+	classesToAdd := []api.Schema{schema}
 	for len(classesToAdd) > 0 {
 		schema, classesToAdd = classesToAdd[0], classesToAdd[1:]
 		if !dia.Has(schema.Title()) {
@@ -57,30 +66,28 @@ func diagramOp(md markdown.Markdown, schema headers.Schema) {
 			classesToAdd = append(classesToAdd, newClasses...)
 		}
 	}
-
-	md.Mermaid(dia.String())
 }
 
-func addClass(dia mermaid.Mermaid, schema headers.Schema) []headers.Schema {
+func addClass(dia markdown.Mermaid, schema api.Schema) []api.Schema {
 	switch schema.Type() {
 	case schemaType.Enum:
-		addEnum(dia, schema.(headers.EnumSchema))
-		return []headers.Schema{}
+		addEnum(dia, schema.(api.EnumSchema))
+		return []api.Schema{}
 	case schemaType.Composite:
-		return addComposite(dia, schema.(headers.CompositeSchema))
+		return addComposite(dia, schema.(api.CompositeSchema))
 	case schemaType.Object:
-		return addObject(dia, schema.(headers.ObjectSchema))
+		return addObject(dia, schema.(api.ObjectSchema))
 	default:
-		return []headers.Schema{}
+		return []api.Schema{}
 	}
 }
 
-func addEnum(dia mermaid.Mermaid, schema headers.EnumSchema) {
+func addEnum(dia markdown.Mermaid, schema api.EnumSchema) {
 	dia.Enum(schema.Title(), schema.Values()...)
 }
 
-func addComposite(dia mermaid.Mermaid, schema headers.CompositeSchema) []headers.Schema {
-	newClasses := []headers.Schema{}
+func addComposite(dia markdown.Mermaid, schema api.CompositeSchema) []api.Schema {
+	newClasses := []api.Schema{}
 
 	c := dia.Interface(schema.Title())
 	c.AddEntry(string(schema.CompositeType()) + `:`)
@@ -95,11 +102,11 @@ func addComposite(dia mermaid.Mermaid, schema headers.CompositeSchema) []headers
 	return newClasses
 }
 
-func addObject(dia mermaid.Mermaid, schema headers.ObjectSchema) []headers.Schema {
-	newClasses := []headers.Schema{}
+func addObject(dia markdown.Mermaid, schema api.ObjectSchema) []api.Schema {
+	newClasses := []api.Schema{}
 
 	c := dia.Class(schema.Title())
-	obj := schema.(headers.ObjectSchema)
+	obj := schema.(api.ObjectSchema)
 	for _, name := range obj.PropertyNames() {
 		prop := obj.Property(name)
 		typeName, base := schemaTypeNameAndBase(prop)
@@ -117,7 +124,7 @@ func addObject(dia mermaid.Mermaid, schema headers.ObjectSchema) []headers.Schem
 	return newClasses
 }
 
-func schemaTypeNameAndBase(schema headers.Schema) (string, headers.Schema) {
+func schemaTypeNameAndBase(schema api.Schema) (string, api.Schema) {
 	switch schema.Type() {
 	case schemaType.Enum,
 		schemaType.Object:
@@ -127,7 +134,7 @@ func schemaTypeNameAndBase(schema headers.Schema) (string, headers.Schema) {
 		return schema.Title(), schema
 
 	case schemaType.Array:
-		typeName, base := schemaTypeNameAndBase(schema.(headers.ArraySchema).ItemType())
+		typeName, base := schemaTypeNameAndBase(schema.(api.ArraySchema).ItemType())
 		return typeName + `[]`, base
 
 	default:
