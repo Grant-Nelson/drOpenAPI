@@ -1,6 +1,10 @@
 package response
 
-import "github.com/grant-nelson/DrOpenAPI/internal/api"
+import (
+	"fmt"
+
+	"github.com/grant-nelson/DrOpenAPI/internal/api"
+)
 
 type responseImp struct {
 	code        string
@@ -20,7 +24,7 @@ func New(factory api.Factory, code string, data api.Raw) api.Response {
 
 func (imp *responseImp) setInfo(data api.Raw) {
 	if description, has := data[`description`]; has {
-		imp.description = description.(string)
+		imp.description = fmt.Sprint(description)
 	}
 }
 

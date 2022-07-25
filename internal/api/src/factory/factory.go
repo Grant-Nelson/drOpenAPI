@@ -13,13 +13,11 @@ import (
 )
 
 type factoryImp struct {
-	titleNum int
+	num int
 }
 
 func New() api.Factory {
-	return &factoryImp{
-		titleNum: 0,
-	}
+	return &factoryImp{num: 0}
 }
 
 func (f *factoryImp) OpenAPI(data api.Raw) api.OpenAPI {
@@ -39,9 +37,10 @@ func (f *factoryImp) Response(code string, data api.Raw) api.Response {
 }
 
 func (f *factoryImp) Schema(title string, data api.Raw) api.Schema {
-	if len(title) == 0 {
-		f.titleNum++
-		title = fmt.Sprintf(`unnamed_%d`, f.titleNum)
-	}
 	return schema.New(f, title, data)
+}
+
+func (f *factoryImp) UniqueName() string {
+	f.num++
+	return fmt.Sprintf(`unnamed%d`, f.num)
 }

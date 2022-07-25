@@ -60,6 +60,9 @@ func (imp *mermaidImp) Enum(name string, values ...string) {
 }
 
 func (imp *mermaidImp) String() string {
+	if len(imp.order) == 0 {
+		return ``
+	}
 	parts := make([]string, len(imp.order))
 	for i, class := range imp.order {
 		parts[i] = strings.TrimSpace(class.String())

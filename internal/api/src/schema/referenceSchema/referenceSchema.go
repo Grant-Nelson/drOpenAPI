@@ -27,7 +27,7 @@ var _ api.Resolvable = (*referenceImp)(nil)
 func New(title string, data api.Raw) api.Schema {
 	imp := &referenceImp{title: title}
 	if ref, has := data[`$ref`]; has {
-		imp.ref = ref.(string)
+		imp.ref = fmt.Sprint(ref)
 	}
 	return imp
 }

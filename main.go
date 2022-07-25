@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 
 	"github.com/grant-nelson/DrOpenAPI/internal/reader"
@@ -10,12 +9,14 @@ import (
 )
 
 func main() {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println(`Error:`, r)
-			os.Exit(1)
-		}
-	}()
+	/*
+		defer func() {
+			if r := recover(); r != nil {
+				fmt.Println(`Error:`, r)
+				os.Exit(1)
+			}
+		}()
+	*/
 
 	var input, output, fileType, title string
 	flag.StringVar(&input, `i`, ``,

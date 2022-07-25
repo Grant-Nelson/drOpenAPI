@@ -36,7 +36,7 @@ func New(factory api.Factory, title string, data api.Raw) api.Schema {
 	}
 
 	imp := &baseImp{title: title}
-	imp.setInfo(data)
+	imp.setInfo(factory, data)
 	imp.setRequired(data)
 	imp.setStates(data)
 
@@ -66,19 +66,27 @@ func New(factory api.Factory, title string, data api.Raw) api.Schema {
 	return imp
 }
 
-func (imp *baseImp) setInfo(data api.Raw) {
+func (imp *baseImp) setInfo(factory api.Factory, data api.Raw) {
 	if title, has := data[`title`]; has {
-		imp.title = title.(string)
+		imp.title = fmt.Sprint(title)
 	}
+
+	if len(imp.title) == 0 {
+		imp.title = factory.UniqueName()
+	}
+
 	if description, has := data[`description`]; has {
-		imp.description = description.(string)
+		imp.description = fmt.Sprint(description)
 	}
+
 	if st, has := data[`type`]; has {
-		imp.schemaType = schemaType.Type(st.(string))
+		imp.schemaType = schemaType.Type(fmt.Sprint(st))
 	}
+
 	if format, has := data[`format`]; has {
-		imp.format = format.(string)
+		imp.format = fmt.Sprint(format)
 	}
+
 	if value, has := data[`default`]; has {
 		imp.defaultValue = fmt.Sprint(value)
 	}
@@ -88,7 +96,8 @@ func (imp *baseImp) setRequired(data api.Raw) {
 	imp.required = []string{}
 	if required, has := data[`required`]; has {
 		for _, req := range required.([]interface{}) {
-			imp.required = append(imp.required, req.(string))
+			reqStr := fmt.Sprint(req)
+			imp.required = append(imp.required, reqStr)
 		}
 	}
 	sort.Strings(imp.required)

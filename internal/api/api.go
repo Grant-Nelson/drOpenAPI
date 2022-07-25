@@ -17,6 +17,7 @@ type (
 		Operation(opType operationType.Type, data Raw) Operation
 		Response(code string, data Raw) Response
 		Schema(title string, data Raw) Schema
+		UniqueName() string
 	}
 
 	Resolvable interface {

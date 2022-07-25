@@ -38,31 +38,37 @@ func addOperation(md markdown.Markdown, path string, op api.Operation) {
 
 			md.Section(op.OperationId())
 
-			par1 := md.Par()
 			if len(op.Summary()) > 0 {
-				par1.Bold(`Summary:`).Write(` %s`, op.Summary()).LineBreak()
+				md.Par().Bold(`Summary:`).Write(` %s`, op.Summary())
 			}
+
 			if len(op.Description()) > 0 {
-				par1.Bold(`Description:`).Write(` %s`, op.Description())
+				md.Par().Bold(`Description:`).Write(` %s`, op.Description())
 			}
+
+			typeName, base := schemaTypeNameAndBase(schema)
 
 			md.Par().
 				Bold(`Path:`).Write(` `).Code(path).LineBreak().
 				Bold(`Operation:`).Write(` `).Code(strings.ToUpper(string(op.OpType()))).LineBreak().
-				Bold(`Tags:`).Write(` `).Code(strings.Join(op.Tags(), `, `))
+				Bold(`Tags:`).Write(` `).Code(strings.Join(op.Tags(), `, `)).LineBreak().
+				Bold(`Returns:`).Write(` `).Code(typeName)
 
-			diagramOp(md, schema)
+			if base != nil {
+				diagramOp(md, base)
+			}
 		}
 	}
 }
 
 func diagramOp(md markdown.Markdown, schema api.Schema) {
 	dia := md.Mermaid()
-	classesToAdd := []api.Schema{schema}
+	classesToAdd := addClass(dia, schema)
 	for len(classesToAdd) > 0 {
-		schema, classesToAdd = classesToAdd[0], classesToAdd[1:]
-		if !dia.Has(schema.Title()) {
-			newClasses := addClass(dia, schema)
+		next := classesToAdd[0]
+		classesToAdd = classesToAdd[1:]
+		if !dia.Has(next.Title()) {
+			newClasses := addClass(dia, next)
 			classesToAdd = append(classesToAdd, newClasses...)
 		}
 	}

@@ -15,12 +15,16 @@ func New(factory markdown.Factory) markdown.Text {
 }
 
 func (imp *textImp) Bold(msg string, args ...interface{}) markdown.Text {
-	imp.buf.Write(`**`+msg+`**`, args...)
+	if len(msg) > 0 {
+		imp.buf.Write(`**`+msg+`**`, args...)
+	}
 	return imp
 }
 
 func (imp *textImp) Code(msg string, args ...interface{}) markdown.Text {
-	imp.buf.Write("`"+msg+"`", args...)
+	if len(msg) > 0 {
+		imp.buf.Write("`"+msg+"`", args...)
+	}
 	return imp
 }
 
@@ -30,7 +34,13 @@ func (imp *textImp) Write(msg string, args ...interface{}) markdown.Text {
 }
 
 func (imp *textImp) Link(text, href string) markdown.Text {
-	imp.buf.Write(`[%s](%s)`, text, href)
+	if len(text) > 0 {
+		if len(href) > 0 {
+			imp.buf.Write(`[%s](%s)`, text, href)
+		} else {
+			imp.buf.Write(text)
+		}
+	}
 	return imp
 }
 

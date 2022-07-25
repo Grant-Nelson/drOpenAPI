@@ -1,6 +1,7 @@
 package openAPI
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/grant-nelson/DrOpenAPI/internal/api"
@@ -47,8 +48,9 @@ func (imp *openAPIImp) setComponents(factory api.Factory, data api.Raw) {
 	if comp, has := data[`components`]; has {
 		if s, has := comp.(api.Raw)[`schemas`]; has {
 			for title, value := range s.(api.Raw) {
-				imp.schemas[title] = factory.Schema(title, value.(api.Raw))
-				imp.schemaNames = append(imp.schemaNames, title)
+				titleStr := fmt.Sprint(title)
+				imp.schemas[titleStr] = factory.Schema(titleStr, value.(api.Raw))
+				imp.schemaNames = append(imp.schemaNames, titleStr)
 			}
 		}
 	}
@@ -60,8 +62,8 @@ func (imp *openAPIImp) setPaths(factory api.Factory, data api.Raw) {
 	imp.pathItems = map[string]api.PathItem{}
 	if paths, has := data[`paths`]; has {
 		for path, item := range paths.(api.Raw) {
-			imp.paths = append(imp.paths, path)
 			imp.pathItems[path] = factory.PathItem(path, item.(api.Raw))
+			imp.paths = append(imp.paths, path)
 		}
 	}
 	sort.Strings(imp.paths)
@@ -72,7 +74,8 @@ func (imp *openAPIImp) setTags(data api.Raw) {
 	if tags, has := data[`tags`]; has {
 		for _, tag := range tags.([]interface{}) {
 			if name, has := tag.(api.Raw)[`name`]; has {
-				imp.tags = append(imp.tags, name.(string))
+				tagStr := fmt.Sprint(name)
+				imp.tags = append(imp.tags, tagStr)
 			}
 		}
 	}
