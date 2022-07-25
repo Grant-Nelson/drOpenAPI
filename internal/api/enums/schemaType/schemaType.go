@@ -1,33 +1,36 @@
 package schemaType
 
+// Type is the variable type for this enumerator.
 type Type string
 
 const (
-	Array     Type = `array`
-	Boolean   Type = `boolean`
+	// Array indicates the schema is an array type.
+	Array Type = `array`
+
+	// Boolean indicates the schema is a boolean.
+	Boolean Type = `boolean`
+
+	// Composite indicates the schema is an object made out
+	// of oneOf, anyOf, or allOf given component schemas.
 	Composite Type = `composite`
-	Enum      Type = `enum`
-	Integer   Type = `integer`
-	Number    Type = `number`
-	Object    Type = `object`
-	String    Type = `string`
+
+	// Enum indicates the schema is an object with enumerated types.
+	Enum Type = `enum`
+
+	// Integer indicates the schema is an integer.
+	Integer Type = `integer`
+
+	// Number indicates the schema is a floating point number.
+	Number Type = `number`
+
+	// Object indicates the schema is an object with properties.
+	Object Type = `object`
+
+	// String indicates the schema is a string.
+	String Type = `string`
 )
 
-func (op Type) Valid() bool {
-	switch op {
-	case Array,
-		Boolean,
-		Composite,
-		Enum,
-		Integer,
-		Number,
-		Object,
-		String:
-		return true
-	}
-	return false
-}
-
+// All gets the list of all enumerator values in this enumerator.
 func All() []Type {
 	return []Type{
 		Array,

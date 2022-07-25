@@ -2,7 +2,7 @@
 
 ![YAML & JSON to Markdown with Mermaid](./image.png)
 
-Need an MD?
+Need a MD?
 
 Dr OpenAPI is a simple markdown generator for an OpenAPI bundle.
 

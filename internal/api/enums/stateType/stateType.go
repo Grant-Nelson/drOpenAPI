@@ -1,25 +1,23 @@
 package stateType
 
+// Type is the variable type for this enumerator.
 type Type string
 
 const (
+	// This is a schema state indicating the schema has been deprecated.
 	Deprecated Type = `deprecated`
-	Nullable   Type = `nullable`
-	ReadOnly   Type = `readOnly`
-	WriteOnly  Type = `writeOnly`
+
+	// Nullable is a schema state indicating the schema can be nulled.
+	Nullable Type = `nullable`
+
+	// ReadOnly is a schema state which can only be read from.
+	ReadOnly Type = `readOnly`
+
+	// WriteOnly is a scheme state which can only be written.
+	WriteOnly Type = `writeOnly`
 )
 
-func (op Type) Valid() bool {
-	switch op {
-	case Deprecated,
-		Nullable,
-		ReadOnly,
-		WriteOnly:
-		return true
-	}
-	return false
-}
-
+// All gets the list of all enumerator values in this enumerator.
 func All() []Type {
 	return []Type{
 		Deprecated,

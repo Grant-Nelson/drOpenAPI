@@ -7,10 +7,15 @@ import (
 
 	"github.com/grant-nelson/DrOpenAPI/internal/api"
 	"github.com/grant-nelson/DrOpenAPI/internal/api/enums/schemaType"
+	"github.com/grant-nelson/DrOpenAPI/internal/api/enums/stateType"
 	"github.com/grant-nelson/DrOpenAPI/internal/markdown"
 	"github.com/grant-nelson/DrOpenAPI/internal/markdown/src/factory"
 )
 
+// Write creates or overwrites the given output path with the markdown
+// file containing the description of the given OpenAPI object.
+// If the given title is non-empty, then it will be written as the title
+// shown at the top of the created markdown file.
 func Write(outputPath, title string, openAPI api.OpenAPI) {
 	if len(outputPath) == 0 {
 		panic(errors.New(`must provide a non-empty output file path`))
@@ -32,6 +37,8 @@ func Write(outputPath, title string, openAPI api.OpenAPI) {
 	}
 }
 
+// addOperation adds the given operation information into the given markdown being created.
+// The given path is the path described in the OpenAPI definition the given operation is under.
 func addOperation(md markdown.Markdown, path string, op api.Operation) {
 	if res := op.Response(`200`); res != nil {
 		if schema := res.Content(`application/json`); schema != nil {
@@ -61,6 +68,7 @@ func addOperation(md markdown.Markdown, path string, op api.Operation) {
 	}
 }
 
+// diagramOp adds a mermaid diagram to the given markdown as a way to describe the given schema.
 func diagramOp(md markdown.Markdown, schema api.Schema) {
 	dia := md.Mermaid()
 	classesToAdd := addClass(dia, schema)
@@ -74,6 +82,8 @@ func diagramOp(md markdown.Markdown, schema api.Schema) {
 	}
 }
 
+// addClass adds a class for the given schema into the given mermaid diagram.
+// The returned schema are the schema referenced by the given schema.
 func addClass(dia markdown.Mermaid, schema api.Schema) []api.Schema {
 	switch schema.Type() {
 	case schemaType.Enum:
@@ -88,10 +98,13 @@ func addClass(dia markdown.Mermaid, schema api.Schema) []api.Schema {
 	}
 }
 
+// addEnum adds a class for the given enumerator schema into the given mermaid diagram.
 func addEnum(dia markdown.Mermaid, schema api.EnumSchema) {
 	dia.Enum(schema.Title(), schema.Values()...)
 }
 
+// addComposite adds a class for the given composite (e.g. `oneOf`)
+// schema into the given mermaid diagram.
 func addComposite(dia markdown.Mermaid, schema api.CompositeSchema) []api.Schema {
 	newClasses := []api.Schema{}
 
@@ -108,6 +121,7 @@ func addComposite(dia markdown.Mermaid, schema api.CompositeSchema) []api.Schema
 	return newClasses
 }
 
+// addObject adds a class for the given object schema into the given mermaid diagram.
 func addObject(dia markdown.Mermaid, schema api.ObjectSchema) []api.Schema {
 	newClasses := []api.Schema{}
 
@@ -130,23 +144,30 @@ func addObject(dia markdown.Mermaid, schema api.ObjectSchema) []api.Schema {
 	return newClasses
 }
 
+// schemaTypeNameAndBase determines the type for the given schema as a string
+// and inner most schema that is referenced by this type.
+// If there are no inner schema then the returned schema will be nil.
 func schemaTypeNameAndBase(schema api.Schema) (string, api.Schema) {
+	head := ``
+	if schema.State(stateType.Nullable) {
+		head = `*`
+	}
 	switch schema.Type() {
 	case schemaType.Enum,
 		schemaType.Object:
-		return schema.Title(), schema
+		return head + schema.Title(), schema
 
 	case schemaType.Composite:
-		return schema.Title(), schema
+		return head + schema.Title(), schema
 
 	case schemaType.Array:
 		typeName, base := schemaTypeNameAndBase(schema.(api.ArraySchema).ItemType())
-		return typeName + `[]`, base
+		return head + typeName + `[]`, base
 
 	default:
 		if len(schema.Format()) > 0 {
-			return schema.Format(), nil
+			return head + schema.Format(), nil
 		}
-		return string(schema.Type()), nil
+		return head + string(schema.Type()), nil
 	}
 }

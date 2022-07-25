@@ -14,8 +14,14 @@ import (
 	"github.com/grant-nelson/DrOpenAPI/internal/api/src/factory"
 )
 
+// unmarshalHandle is a function signature for a tool to parse
+// the given file's data into the object representation of that data.
 type unmarshalHandle func(in []byte, out interface{}) error
 
+// Read will open the given file and convert it into an OpenAPI object.
+// The given fileType overrides the file path extension, when not empty,
+// to select how the file's data is stored (e.g. `yaml`, `json`).
+// This will panic on error.
 func Read(path, fileType string) api.OpenAPI {
 	if len(path) == 0 {
 		panic(errors.New(`must provide a non-empty input file path`))
@@ -26,6 +32,8 @@ func Read(path, fileType string) api.OpenAPI {
 	return factory.New().OpenAPI(raw)
 }
 
+// getUnmarshalHandler determines which unmarshal method to use to parse
+// the files data given the path and fileType override.
 func getUnmarshalHandler(path, fileType string) unmarshalHandle {
 	if len(fileType) == 0 {
 		ext := filepath.Ext(fileType)
@@ -47,6 +55,8 @@ func getUnmarshalHandler(path, fileType string) unmarshalHandle {
 	}
 }
 
+// readRaw reads the raw object representation from the file at the given path
+// using the given unmarshal method to parse the file's data.
 func readRaw(path string, unmarshal unmarshalHandle) api.Raw {
 	file, err := ioutil.ReadFile(path)
 	if err != nil {
