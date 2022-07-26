@@ -3,7 +3,7 @@ package enumSchema
 import (
 	"sort"
 
-	"github.com/grant-nelson/DrOpenAPI/internal/api"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
 )
 
 // enumImp is the implementation of the EnumSchema interface.

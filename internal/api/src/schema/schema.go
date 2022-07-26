@@ -3,15 +3,15 @@ package schema
 import (
 	"fmt"
 
-	"github.com/grant-nelson/DrOpenAPI/internal/api"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/enums/compositeType"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/enums/schemaType"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/enums/stateType"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/src/schema/arraySchema"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/src/schema/compositeSchema"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/src/schema/enumSchema"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/src/schema/objectSchema"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/src/schema/referenceSchema"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/compositeType"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/schemaType"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/stateType"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/src/schema/arraySchema"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/src/schema/compositeSchema"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/src/schema/enumSchema"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/src/schema/objectSchema"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/src/schema/referenceSchema"
 )
 
 // baseImp is the implementation of the Schema interface.

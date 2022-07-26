@@ -1,6 +1,6 @@
 package arraySchema
 
-import "github.com/grant-nelson/DrOpenAPI/internal/api"
+import "github.com/Grant-Nelson/DrOpenAPI/internal/api"
 
 // arrayImp is the implementation of the ArraySchema interface.
 // This also implements the Resolvable interface.

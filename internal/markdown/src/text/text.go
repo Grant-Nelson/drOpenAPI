@@ -1,7 +1,7 @@
 package text
 
 import (
-	"github.com/grant-nelson/DrOpenAPI/internal/markdown"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown"
 )
 
 // textImp is the implementation of the Text interface.

@@ -16,10 +16,20 @@ The paths must have a `200` response code with `application/json` media type.
 ## Setup
 
 - Setup [Go v1.17 or later](https://go.dev/dl/)
+- Clone with `go get github.com/Grant-Nelson/DrOpenAPI`
 
-## Run
+## Run from this folder
 
 - Generate MD with `go run main.go -i <input> -o <output>`
 - For help run `go run main.go -h`
-- To change the title on the MD file, add the `-t` argument.
+
+## Installing to use anywhere
+
+- Install with `go install`
+- Generate MD with `DrOpenAPI -i <input> -o <output>`
+- For help run `DrOpenAPI -h`
+
+## Customize Markdown
+
+- To change the title on the MD file, add a `-t <title>` argument.
   For example `-t "Title for MD file"`

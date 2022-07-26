@@ -3,13 +3,13 @@ package factory
 import (
 	"fmt"
 
-	"github.com/grant-nelson/DrOpenAPI/internal/api"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/enums/operationType"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/src/openAPI"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/src/operation"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/src/pathItem"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/src/response"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/src/schema"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/operationType"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/src/openAPI"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/src/operation"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/src/pathItem"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/src/response"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/src/schema"
 )
 
 // factoryImp is the implementation of the Factory interface.

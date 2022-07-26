@@ -10,8 +10,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/grant-nelson/DrOpenAPI/internal/api"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/src/factory"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/src/factory"
 )
 
 // unmarshalHandle is a function signature for a tool to parse

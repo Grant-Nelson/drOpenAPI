@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/grant-nelson/DrOpenAPI/internal/api"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
 )
 
 // objectImp is the implementation of the ObjectSchema interface.

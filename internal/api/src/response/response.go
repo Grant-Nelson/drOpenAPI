@@ -3,7 +3,7 @@ package response
 import (
 	"fmt"
 
-	"github.com/grant-nelson/DrOpenAPI/internal/api"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
 )
 
 // responseImp is the implementation of the Response interface.

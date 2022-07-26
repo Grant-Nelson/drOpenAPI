@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/grant-nelson/DrOpenAPI/internal/reader"
-	"github.com/grant-nelson/DrOpenAPI/internal/writer"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/reader"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/writer"
 )
 
 func main() {

@@ -3,8 +3,8 @@ package compositeSchema
 import (
 	"sort"
 
-	"github.com/grant-nelson/DrOpenAPI/internal/api"
-	"github.com/grant-nelson/DrOpenAPI/internal/api/enums/compositeType"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
+	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/compositeType"
 )
 
 // compositeImp is the implementation of the CompositeSchema interface.

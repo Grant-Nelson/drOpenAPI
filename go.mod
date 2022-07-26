@@ -1,4 +1,4 @@
-module github.com/grant-nelson/DrOpenAPI
+module github.com/Grant-Nelson/DrOpenAPI
 
 go 1.17
 
