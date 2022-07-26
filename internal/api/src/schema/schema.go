@@ -2,7 +2,6 @@ package schema
 
 import (
 	"fmt"
-	"sort"
 
 	"github.com/grant-nelson/DrOpenAPI/internal/api"
 	"github.com/grant-nelson/DrOpenAPI/internal/api/enums/compositeType"
@@ -15,21 +14,23 @@ import (
 	"github.com/grant-nelson/DrOpenAPI/internal/api/src/schema/referenceSchema"
 )
 
+// baseImp is the implementation of the Schema interface.
 type baseImp struct {
 	title        string
 	description  string
 	schemaType   schemaType.Type
 	format       string
 	defaultValue string
-	required     []string
 	states       map[stateType.Type]bool
 }
 
+// has determines if the given key is in the given raw data.
 func has(data api.Raw, key string) bool {
 	_, has := data[key]
 	return has
 }
 
+// New creates one of the Schema interfaces based on the given data.
 func New(factory api.Factory, title string, data api.Raw) api.Schema {
 	if _, has := data[`$ref`]; has {
 		return referenceSchema.New(title, data)
@@ -37,7 +38,6 @@ func New(factory api.Factory, title string, data api.Raw) api.Schema {
 
 	imp := &baseImp{title: title}
 	imp.setInfo(factory, data)
-	imp.setRequired(data)
 	imp.setStates(data)
 
 	if imp.schemaType == schemaType.Array || has(data, `items`) {
@@ -66,6 +66,8 @@ func New(factory api.Factory, title string, data api.Raw) api.Schema {
 	return imp
 }
 
+// setInfo reads all the basic information from the given data,
+// then sets them to this Schema implementation.
 func (imp *baseImp) setInfo(factory api.Factory, data api.Raw) {
 	if title, has := data[`title`]; has {
 		imp.title = fmt.Sprint(title)
@@ -92,17 +94,8 @@ func (imp *baseImp) setInfo(factory api.Factory, data api.Raw) {
 	}
 }
 
-func (imp *baseImp) setRequired(data api.Raw) {
-	imp.required = []string{}
-	if required, has := data[`required`]; has {
-		for _, req := range required.([]interface{}) {
-			reqStr := fmt.Sprint(req)
-			imp.required = append(imp.required, reqStr)
-		}
-	}
-	sort.Strings(imp.required)
-}
-
+// setStates reads the states (e.g. Readonly) from the given data,
+// then sets them to this Schema implementation.
 func (imp *baseImp) setStates(data api.Raw) {
 	imp.states = map[stateType.Type]bool{}
 	for _, st := range stateType.All() {

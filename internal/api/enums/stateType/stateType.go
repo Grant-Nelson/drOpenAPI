@@ -1,6 +1,7 @@
 package stateType
 
-// Type is the variable type for this enumerator.
+// Type is the variable type for an enumerator for looking up
+// the boolean states from a schema.
 type Type string
 
 const (

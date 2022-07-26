@@ -11,10 +11,9 @@ import (
 
 const refPrefix = `#/components/schemas/`
 
-func throwError(msg string, args ...interface{}) {
-	panic(fmt.Errorf(msg, args...))
-}
-
+// referenceImp is the implementation of the Schema and Resolvable interface
+// but represents a reference schema that needs to be resolved.
+// All of these should have been removed prior to the OpenAPI creation being finished.
 type referenceImp struct {
 	title      string
 	ref        string
@@ -24,6 +23,7 @@ type referenceImp struct {
 
 var _ api.Resolvable = (*referenceImp)(nil)
 
+// New creates a new reference to a Schema.
 func New(title string, data api.Raw) api.Schema {
 	imp := &referenceImp{title: title}
 	if ref, has := data[`$ref`]; has {
@@ -32,6 +32,12 @@ func New(title string, data api.Raw) api.Schema {
 	return imp
 }
 
+func throwError(msg string, args ...interface{}) {
+	panic(fmt.Errorf(msg, args...))
+}
+
+// Resolve performs a lookup using the reference and
+// returns the found schema in the given OpenAPI.
 func (imp *referenceImp) Resolve(openAPI api.OpenAPI) api.Schema {
 	if imp.resolution != nil {
 		return imp.resolution
@@ -61,6 +67,8 @@ func (imp *referenceImp) Resolve(openAPI api.OpenAPI) api.Schema {
 	return target
 }
 
+// badTouch is used to keep this reference from being used like a Schema
+// even though it has to implement a Schema interface.
 func (imp *referenceImp) badTouch() {
 	throwError(`must resolve reference, %q, before trying to read values from schema`, imp.ref)
 }

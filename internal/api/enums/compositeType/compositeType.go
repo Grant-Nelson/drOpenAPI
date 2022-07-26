@@ -1,6 +1,7 @@
 package compositeType
 
-// Type is the variable type for this enumerator.
+// Type is the variable type for an enumerator for the different
+// ways a composite schema can be defined to use its component schemas.
 type Type string
 
 const (

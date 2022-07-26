@@ -12,10 +12,12 @@ import (
 	"github.com/grant-nelson/DrOpenAPI/internal/api/src/schema"
 )
 
+// factoryImp is the implementation of the Factory interface.
 type factoryImp struct {
 	num int
 }
 
+// New creates a new API factory.
 func New() api.Factory {
 	return &factoryImp{num: 0}
 }

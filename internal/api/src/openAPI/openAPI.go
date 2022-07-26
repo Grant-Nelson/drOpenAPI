@@ -7,6 +7,7 @@ import (
 	"github.com/grant-nelson/DrOpenAPI/internal/api"
 )
 
+// openAPIImp is the implementation of the OpenAPI interface.
 type openAPIImp struct {
 	schemaNames []string
 	schemas     map[string]api.Schema
@@ -15,6 +16,7 @@ type openAPIImp struct {
 	tags        []string
 }
 
+// New creates a new OpenAPI instance.
 func New(factory api.Factory, data api.Raw) api.OpenAPI {
 	imp := &openAPIImp{}
 	imp.setComponents(factory, data)
@@ -42,6 +44,8 @@ func New(factory api.Factory, data api.Raw) api.OpenAPI {
 	return imp
 }
 
+// setComponents reads all the component schemas from the given data,
+// then sets them to this OpenAPI implementation.
 func (imp *openAPIImp) setComponents(factory api.Factory, data api.Raw) {
 	imp.schemaNames = []string{}
 	imp.schemas = map[string]api.Schema{}
@@ -57,6 +61,8 @@ func (imp *openAPIImp) setComponents(factory api.Factory, data api.Raw) {
 	sort.Strings(imp.schemaNames)
 }
 
+// setPaths reads all the path items from the given data,
+// then sets them to this OpenAPI implementation.
 func (imp *openAPIImp) setPaths(factory api.Factory, data api.Raw) {
 	imp.paths = []string{}
 	imp.pathItems = map[string]api.PathItem{}
@@ -69,6 +75,8 @@ func (imp *openAPIImp) setPaths(factory api.Factory, data api.Raw) {
 	sort.Strings(imp.paths)
 }
 
+// setTags reads all the tags from the given data,
+// then sets them to this OpenAPI implementation.
 func (imp *openAPIImp) setTags(data api.Raw) {
 	imp.tags = []string{}
 	if tags, has := data[`tags`]; has {

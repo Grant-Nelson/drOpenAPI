@@ -1,6 +1,6 @@
 package operationType
 
-// Type is the variable type for this enumerator.
+// Type is the variable type for an enumerator for the REST operation types.
 type Type string
 
 const (

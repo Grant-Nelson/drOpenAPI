@@ -8,6 +8,7 @@ import (
 	"github.com/grant-nelson/DrOpenAPI/internal/api/enums/operationType"
 )
 
+// operationImp is the implementation of the Operation interface.
 type operationImp struct {
 	opType        operationType.Type
 	operationId   string
@@ -18,6 +19,7 @@ type operationImp struct {
 	tags          []string
 }
 
+// New creates a new Operation instance.
 func New(factory api.Factory, opType operationType.Type, data api.Raw) api.Operation {
 	imp := &operationImp{opType: opType}
 	imp.setInfo(factory, data)
@@ -26,6 +28,8 @@ func New(factory api.Factory, opType operationType.Type, data api.Raw) api.Opera
 	return imp
 }
 
+// setInfo reads all the basic information from the given data,
+// then sets them to this Operation implementation.
 func (imp *operationImp) setInfo(factory api.Factory, data api.Raw) {
 	if operationId, has := data[`operationId`]; has {
 		imp.operationId = fmt.Sprint(operationId)
@@ -44,6 +48,8 @@ func (imp *operationImp) setInfo(factory api.Factory, data api.Raw) {
 	}
 }
 
+// setResponses reads all the response object from the given data,
+// then sets them to this Operation implementation.
 func (imp *operationImp) setResponses(factory api.Factory, data api.Raw) {
 	imp.responseCodes = []string{}
 	imp.responses = map[string]api.Response{}
@@ -64,6 +70,8 @@ func (imp *operationImp) setResponses(factory api.Factory, data api.Raw) {
 	sort.Strings(imp.responseCodes)
 }
 
+// setTags reads all the tags from the given data,
+// then sets them to this OpenAPI implementation.
 func (imp *operationImp) setTags(data api.Raw) {
 	imp.tags = []string{}
 	if tags, has := data[`tags`]; has {

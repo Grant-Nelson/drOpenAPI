@@ -1,6 +1,6 @@
 package schemaType
 
-// Type is the variable type for this enumerator.
+// Type is the variable type for an enumerator for indicating the type of a schema.
 type Type string
 
 const (
