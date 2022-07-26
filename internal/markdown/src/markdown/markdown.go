@@ -12,6 +12,7 @@ const (
 	appPath = `https://github.com/Grant-Nelson/DrOpenAPI`
 )
 
+// markdownImp is the implementation of the Markdown interface.
 type markdownImp struct {
 	factory markdown.Factory
 	title   string
@@ -19,6 +20,7 @@ type markdownImp struct {
 	body    []markdown.Stringer
 }
 
+// New creates a new Markdown instance.
 func New(factory markdown.Factory, title string) markdown.Markdown {
 	imp := &markdownImp{
 		factory: factory,

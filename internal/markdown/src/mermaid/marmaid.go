@@ -7,12 +7,14 @@ import (
 	"github.com/grant-nelson/DrOpenAPI/internal/markdown"
 )
 
+// mermaidImp is the implementation of the Mermaid interface.
 type mermaidImp struct {
 	factory markdown.Factory
 	order   []markdown.Class
 	classes map[string]markdown.Class
 }
 
+// New creates a new Mermaid instance.
 func New(factory markdown.Factory) markdown.Mermaid {
 	return &mermaidImp{
 		factory: factory,
@@ -49,14 +51,17 @@ func (imp *mermaidImp) Interface(name string) markdown.Class {
 	return c
 }
 
-func (imp *mermaidImp) Enum(name string, values ...string) {
-	if _, has := imp.classes[name]; !has {
-		c := imp.newClass(name)
-		c.AddEntry(`<<enumeration>>`)
-		for _, value := range values {
-			c.AddEntry(value)
-		}
+func (imp *mermaidImp) Enum(name string, values ...string) bool {
+	if _, has := imp.classes[name]; has {
+		return false
 	}
+
+	c := imp.newClass(name)
+	c.AddEntry(`<<enumeration>>`)
+	for _, value := range values {
+		c.AddEntry(value)
+	}
+	return true
 }
 
 func (imp *mermaidImp) String() string {

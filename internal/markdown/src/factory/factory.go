@@ -9,8 +9,10 @@ import (
 	"github.com/grant-nelson/DrOpenAPI/internal/markdown/src/text"
 )
 
+// factory is the implementation of the Factory interface.
 type factory struct{}
 
+// New creates a new instance of the markdown factory.
 func New() markdown.Factory {
 	return &factory{}
 }

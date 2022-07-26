@@ -7,10 +7,12 @@ import (
 	"github.com/grant-nelson/DrOpenAPI/internal/markdown"
 )
 
+// stringBufferImp is the implementation of the StringBuffer interface.
 type stringBufferImp struct {
 	buf *bytes.Buffer
 }
 
+// New creates a new StringBuffer instance.
 func New() markdown.StringBuffer {
 	return &stringBufferImp{
 		buf: &bytes.Buffer{},

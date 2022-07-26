@@ -6,6 +6,7 @@ import (
 	"github.com/grant-nelson/DrOpenAPI/internal/markdown"
 )
 
+// classImp is the implementation of the Class interface.
 type classImp struct {
 	name   string
 	body   markdown.StringBuffer
@@ -13,6 +14,7 @@ type classImp struct {
 	cons   markdown.StringBuffer
 }
 
+// New creates a new Class instance.
 func New(factory markdown.Factory, name string) markdown.Class {
 	return &classImp{
 		name:   name,
