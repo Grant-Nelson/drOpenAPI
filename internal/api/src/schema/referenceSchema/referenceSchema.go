@@ -26,13 +26,13 @@ var _ api.Resolvable = (*referenceImp)(nil)
 // New creates a new reference to a Schema.
 func New(title string, data api.Raw) api.Schema {
 	imp := &referenceImp{title: title}
-	if ref, has := data[`$ref`]; has {
-		imp.ref = fmt.Sprint(ref)
+	if ref, has := api.Get[string](data, `$ref`); has {
+		imp.ref = ref
 	}
 	return imp
 }
 
-func throwError(msg string, args ...interface{}) {
+func throwError(msg string, args ...any) {
 	panic(fmt.Errorf(msg, args...))
 }
 

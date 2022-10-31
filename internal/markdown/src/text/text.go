@@ -1,6 +1,8 @@
 package text
 
 import (
+	"strings"
+
 	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown"
 )
 
@@ -23,7 +25,7 @@ func convertNameToRef(name string) string {
 	hasHyphen := false
 	for _, c := range name {
 		switch {
-		case c >= 'a' && c <= 'z':
+		case (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'):
 			href = append(href, c)
 			hasHyphen = false
 		case c >= 'A' && c <= 'Z':
@@ -39,26 +41,27 @@ func convertNameToRef(name string) string {
 	return `#` + string(href)
 }
 
-func (imp *textImp) Bold(msg string, args ...interface{}) markdown.Text {
+func (imp *textImp) Bold(msg string, args ...any) markdown.Text {
 	if len(msg) > 0 {
 		imp.buf.Write(`**`+msg+`**`, args...)
 	}
 	return imp
 }
 
-func (imp *textImp) Code(msg string, args ...interface{}) markdown.Text {
+func (imp *textImp) Code(msg string, args ...any) markdown.Text {
 	if len(msg) > 0 {
 		imp.buf.Write("`"+msg+"`", args...)
 	}
 	return imp
 }
 
-func (imp *textImp) Write(msg string, args ...interface{}) markdown.Text {
+func (imp *textImp) Write(msg string, args ...any) markdown.Text {
 	imp.buf.Write(msg, args...)
 	return imp
 }
 
 func (imp *textImp) Link(text, href string) markdown.Text {
+	text = strings.TrimSpace(text)
 	if len(text) > 0 {
 		if len(href) > 0 {
 			imp.buf.Write(`[%s](%s)`, text, href)
@@ -75,6 +78,11 @@ func (imp *textImp) Ref(text, name string) markdown.Text {
 
 func (imp *textImp) LineBreak() markdown.Text {
 	imp.buf.Write("  \n")
+	return imp
+}
+
+func (imp *textImp) HorizontalLine() markdown.Text {
+	imp.buf.Write("\n---\n\n")
 	return imp
 }
 

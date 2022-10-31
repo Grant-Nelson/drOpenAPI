@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"fmt"
-
 	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
 	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/compositeType"
 	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/schemaType"
@@ -32,7 +30,7 @@ func has(data api.Raw, key string) bool {
 
 // New creates one of the Schema interfaces based on the given data.
 func New(factory api.Factory, title string, data api.Raw) api.Schema {
-	if _, has := data[`$ref`]; has {
+	if has(data, `$ref`) {
 		return referenceSchema.New(title, data)
 	}
 
@@ -60,7 +58,6 @@ func New(factory api.Factory, title string, data api.Raw) api.Schema {
 			imp.schemaType = schemaType.Composite
 			return compositeSchema.New(imp, factory, data)
 		}
-		break
 	}
 
 	return imp
@@ -69,28 +66,28 @@ func New(factory api.Factory, title string, data api.Raw) api.Schema {
 // setInfo reads all the basic information from the given data,
 // then sets them to this Schema implementation.
 func (imp *baseImp) setInfo(factory api.Factory, data api.Raw) {
-	if title, has := data[`title`]; has {
-		imp.title = fmt.Sprint(title)
+	if title, has := api.Get[string](data, `title`); has {
+		imp.title = title
 	}
 
 	if len(imp.title) == 0 {
 		imp.title = factory.UniqueName()
 	}
 
-	if description, has := data[`description`]; has {
-		imp.description = fmt.Sprint(description)
+	if description, has := api.Get[string](data, `description`); has {
+		imp.description = description
 	}
 
-	if st, has := data[`type`]; has {
-		imp.schemaType = schemaType.Type(fmt.Sprint(st))
+	if st, has := api.Get[string](data, `type`); has {
+		imp.schemaType = schemaType.Type(st)
 	}
 
-	if format, has := data[`format`]; has {
-		imp.format = fmt.Sprint(format)
+	if format, has := api.Get[string](data, `format`); has {
+		imp.format = format
 	}
 
-	if value, has := data[`default`]; has {
-		imp.defaultValue = fmt.Sprint(value)
+	if value, has := api.Get[string](data, `default`); has {
+		imp.defaultValue = value
 	}
 }
 
@@ -99,10 +96,8 @@ func (imp *baseImp) setInfo(factory api.Factory, data api.Raw) {
 func (imp *baseImp) setStates(data api.Raw) {
 	imp.states = map[stateType.Type]bool{}
 	for _, st := range stateType.All() {
-		if state, has := data[string(st)]; has {
-			if state.(bool) {
-				imp.states[st] = true
-			}
+		if state, has := api.Get[bool](data, string(st)); has && state {
+			imp.states[st] = true
 		}
 	}
 }

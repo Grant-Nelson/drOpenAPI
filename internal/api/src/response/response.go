@@ -1,8 +1,6 @@
 package response
 
 import (
-	"fmt"
-
 	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
 )
 
@@ -28,8 +26,8 @@ func New(factory api.Factory, code string, data api.Raw) api.Response {
 // setInfo reads all the basic information from the given data,
 // then sets them to this Response implementation.
 func (imp *responseImp) setInfo(data api.Raw) {
-	if description, has := data[`description`]; has {
-		imp.description = fmt.Sprint(description)
+	if description, has := api.Get[string](data, `description`); has {
+		imp.description = description
 	}
 }
 
@@ -37,10 +35,10 @@ func (imp *responseImp) setInfo(data api.Raw) {
 // then sets them to this Response implementation.
 func (imp *responseImp) setContent(factory api.Factory, data api.Raw) {
 	imp.content = map[string]api.Schema{}
-	if mediaTypes, has := data[`content`]; has {
-		for mediaType, media := range mediaTypes.(api.Raw) {
-			if schema, has := media.(api.Raw)[`schema`]; has {
-				imp.content[mediaType] = factory.Schema(``, schema.(api.Raw))
+	if mediaTypes, has := api.Get[api.Raw](data, `content`); has {
+		for mediaType, media := range mediaTypes {
+			if schema, has := api.Get[api.Raw](media, `schema`); has {
+				imp.content[mediaType] = factory.Schema(``, schema)
 			}
 		}
 	}

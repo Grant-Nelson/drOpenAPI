@@ -40,25 +40,36 @@ func Write(outputPath, title string, openAPI api.OpenAPI) {
 // addOperation adds the given operation information into the given markdown being created.
 // The given path is the path described in the OpenAPI definition the given operation is under.
 func addOperation(md markdown.Markdown, path string, op api.Operation) {
-	if res := op.Response(`200`); res != nil {
+	md.Par().HorizontalLine()
+	md.Section(op.OperationId())
+
+	if len(op.Summary()) > 0 {
+		md.Par().Bold(`Summary:`).Write(` %s`, op.Summary())
+	}
+
+	if len(op.Description()) > 0 {
+		md.Par().Bold(`Description:`).Write(` %s`, op.Description())
+	}
+
+	md.Par().
+		Bold(`Path:`).Write(` `).Code(path).LineBreak().
+		Bold(`Operation:`).Write(` `).Code(strings.ToUpper(string(op.OpType()))).LineBreak().
+		Bold(`Tags:`).Write(` `).Code(strings.Join(op.Tags(), `, `))
+
+	if op.RequestBody() != nil {
+		md.Subsection(op.OperationId() + ` Request`)
+		diagramOp(md, op.RequestBody())
+	}
+
+	for _, code := range op.ResponseCodes() {
+		res := op.Response(code)
 		if schema := res.Content(`application/json`); schema != nil {
-
-			md.Section(op.OperationId())
-
-			if len(op.Summary()) > 0 {
-				md.Par().Bold(`Summary:`).Write(` %s`, op.Summary())
-			}
-
-			if len(op.Description()) > 0 {
-				md.Par().Bold(`Description:`).Write(` %s`, op.Description())
-			}
-
 			typeName, base := schemaTypeNameAndBase(schema)
 
+			md.Subsection(op.OperationId() + ` ` + code + ` Response`)
+
 			md.Par().
-				Bold(`Path:`).Write(` `).Code(path).LineBreak().
-				Bold(`Operation:`).Write(` `).Code(strings.ToUpper(string(op.OpType()))).LineBreak().
-				Bold(`Tags:`).Write(` `).Code(strings.Join(op.Tags(), `, `)).LineBreak().
+				Bold(`Code:`).Write(` `).Code(code).LineBreak().
 				Bold(`Returns:`).Write(` `).Code(typeName)
 
 			if base != nil {
@@ -126,9 +137,8 @@ func addObject(dia markdown.Mermaid, schema api.ObjectSchema) []api.Schema {
 	newClasses := []api.Schema{}
 
 	c := dia.Class(schema.Title())
-	obj := schema.(api.ObjectSchema)
-	for _, name := range obj.PropertyNames() {
-		prop := obj.Property(name)
+	for _, name := range schema.PropertyNames() {
+		prop := schema.Property(name)
 		typeName, base := schemaTypeNameAndBase(prop)
 
 		c.AddMember(name, typeName)
