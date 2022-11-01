@@ -23,8 +23,8 @@ func New(base api.Schema, data api.Raw) api.EnumSchema {
 // then sets them to this EnumSchema implementation.
 func (imp *enumImp) setValues(data api.Raw) {
 	imp.values = []string{}
-	if values, has := data[`enums`]; has {
-		imp.values = values.([]string)
+	if values, has := api.Get[[]string](data, `enums`); has {
+		imp.values = values
 	}
 	sort.Strings(imp.values)
 }

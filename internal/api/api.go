@@ -8,10 +8,6 @@ import (
 )
 
 type (
-	// Raw is the typical data type for an object as returned
-	// by an unmarshaler method such as JSON or YAML.
-	Raw map[string]interface{}
-
 	// Factory is used for creating new instances of objects.
 	Factory interface {
 
@@ -25,10 +21,10 @@ type (
 		// Operation creates a new Operation object for the given operation type.
 		Operation(opType operationType.Type, data Raw) Operation
 
-		// Response crates a new Response object for the given response code.
+		// Response creates a new Response object for the given response code.
 		Response(code string, data Raw) Response
 
-		// Schema crates a new Schema type for the given optional initial title.
+		// Schema creates a new Schema type for the given optional initial title.
 		// The title may be empty if unknown and may be overwritten by the given data.
 		Schema(title string, data Raw) Schema
 
@@ -102,6 +98,9 @@ type (
 
 		// Description is an optional string defined for this operation.
 		Description() string
+
+		// RequestBody is an optional schema used to define the body of a request.
+		RequestBody() Schema
 
 		// ResponseCodes is the sorted response codes (including "default") from this operation.
 		ResponseCodes() []string

@@ -21,8 +21,8 @@ func New(base api.Schema, factory api.Factory, data api.Raw) api.ArraySchema {
 // setItemType reads the array element type from the given data,
 // then sets them to this ArraySchema implementation.
 func (imp *arrayImp) setItemType(factory api.Factory, data api.Raw) {
-	if items, has := data[`items`]; has {
-		imp.schema = factory.Schema(``, items.(api.Raw))
+	if items, has := api.Get[api.Raw](data, `items`); has {
+		imp.schema = factory.Schema(``, items)
 	}
 }
 

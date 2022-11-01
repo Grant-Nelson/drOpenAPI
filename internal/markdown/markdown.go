@@ -36,7 +36,7 @@ type (
 
 		// Write concatenates a formatted string to the end of the buffer.
 		// This returns this instance of the string buffer to chain writes together.
-		Write(msg string, args ...interface{}) StringBuffer
+		Write(msg string, args ...any) StringBuffer
 	}
 
 	// Markdown is a tool for writing markdown files programmatically.
@@ -63,15 +63,15 @@ type (
 
 		// Bold writes bold text to the end of the buffer.
 		// This returns this instance to chain text writing.
-		Bold(msg string, args ...interface{}) Text
+		Bold(msg string, args ...any) Text
 
 		// Code writes code text to the end of the buffer.
 		// This returns this instance to chain text writing.
-		Code(msg string, args ...interface{}) Text
+		Code(msg string, args ...any) Text
 
 		// Code writes plain text to the end of the buffer.
 		// This returns this instance to chain text writing.
-		Write(msg string, args ...interface{}) Text
+		Write(msg string, args ...any) Text
 
 		// Link writes an external link to the end of the buffer.
 		// This returns this instance to chain text writing.
@@ -84,6 +84,9 @@ type (
 
 		// LineBreak writes a line break to the buffer.
 		LineBreak() Text
+
+		// HorizontalLine writes a horizontal line for dividing ideas.
+		HorizontalLine() Text
 	}
 
 	// Mermaid is a tool for creating a mermaid class diagrams.

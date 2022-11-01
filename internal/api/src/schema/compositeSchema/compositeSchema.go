@@ -1,6 +1,7 @@
 package compositeSchema
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
@@ -30,9 +31,10 @@ func (imp *compositeImp) setComponents(factory api.Factory, data api.Raw) {
 	for _, compType := range compositeType.All() {
 		if comp, has := data[string(compType)]; has {
 			imp.compositeType = compType
-			for _, schema := range comp.([]interface{}) {
-				imp.composites = append(imp.composites,
-					factory.Schema(``, schema.(api.Raw)))
+			for i, schema := range comp.([]any) {
+				title := fmt.Sprintf(`%s %d`, imp.Title(), i)
+				part := factory.Schema(title, schema.(api.Raw))
+				imp.composites = append(imp.composites, part)
 			}
 			break
 		}

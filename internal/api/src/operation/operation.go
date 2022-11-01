@@ -14,6 +14,7 @@ type operationImp struct {
 	operationId   string
 	summary       string
 	description   string
+	requestBody   api.Schema
 	responseCodes []string
 	responses     map[string]api.Response
 	tags          []string
@@ -23,6 +24,7 @@ type operationImp struct {
 func New(factory api.Factory, opType operationType.Type, data api.Raw) api.Operation {
 	imp := &operationImp{opType: opType}
 	imp.setInfo(factory, data)
+	imp.setRequestBody(factory, data)
 	imp.setResponses(factory, data)
 	imp.setTags(data)
 	return imp
@@ -31,20 +33,28 @@ func New(factory api.Factory, opType operationType.Type, data api.Raw) api.Opera
 // setInfo reads all the basic information from the given data,
 // then sets them to this Operation implementation.
 func (imp *operationImp) setInfo(factory api.Factory, data api.Raw) {
-	if operationId, has := data[`operationId`]; has {
-		imp.operationId = fmt.Sprint(operationId)
+	if operationId, has := api.Get[string](data, `operationId`); has {
+		imp.operationId = operationId
 	}
 
 	if len(imp.operationId) == 0 {
 		imp.operationId = factory.UniqueName()
 	}
 
-	if summary, has := data[`summary`]; has {
-		imp.summary = fmt.Sprint(summary)
+	if summary, has := api.Get[string](data, `summary`); has {
+		imp.summary = summary
 	}
 
-	if description, has := data[`description`]; has {
-		imp.description = fmt.Sprint(description)
+	if description, has := api.Get[string](data, `description`); has {
+		imp.description = description
+	}
+}
+
+// setRequestBody reads the request body object from the given data,
+// then sets it to this Operation implementation.
+func (imp *operationImp) setRequestBody(factory api.Factory, data api.Raw) {
+	if schema, has := api.Get[api.Raw](data, `requestBody`, `content`, `application/json`, `schema`); has {
+		imp.requestBody = factory.Schema(`RequestBody`, schema)
 	}
 }
 
@@ -53,18 +63,16 @@ func (imp *operationImp) setInfo(factory api.Factory, data api.Raw) {
 func (imp *operationImp) setResponses(factory api.Factory, data api.Raw) {
 	imp.responseCodes = []string{}
 	imp.responses = map[string]api.Response{}
-	if responses, has := data[`responses`]; has {
-		if resp, ok := responses.(api.Raw); ok {
-			for code, response := range resp {
-				imp.responses[code] = factory.Response(code, response.(api.Raw))
-				imp.responseCodes = append(imp.responseCodes, code)
-			}
-		} else if resp, ok := responses.(map[interface{}]interface{}); ok {
-			for code, response := range resp {
-				codeStr := fmt.Sprint(code)
-				imp.responses[codeStr] = factory.Response(codeStr, response.(api.Raw))
-				imp.responseCodes = append(imp.responseCodes, codeStr)
-			}
+	if resp, ok := api.Get[api.Raw](data, `responses`); ok {
+		for code, response := range resp {
+			imp.responses[code] = factory.Response(code, response.(api.Raw))
+			imp.responseCodes = append(imp.responseCodes, code)
+		}
+	} else if resp, ok := api.Get[map[any]any](data, `responses`); ok {
+		for code, response := range resp {
+			codeStr := fmt.Sprint(code)
+			imp.responses[codeStr] = factory.Response(codeStr, response.(api.Raw))
+			imp.responseCodes = append(imp.responseCodes, codeStr)
 		}
 	}
 	sort.Strings(imp.responseCodes)
@@ -74,8 +82,8 @@ func (imp *operationImp) setResponses(factory api.Factory, data api.Raw) {
 // then sets them to this OpenAPI implementation.
 func (imp *operationImp) setTags(data api.Raw) {
 	imp.tags = []string{}
-	if tags, has := data[`tags`]; has {
-		for _, tag := range tags.([]interface{}) {
+	if tags, has := api.Get[[]any](data, `tags`); has {
+		for _, tag := range tags {
 			tagStr := fmt.Sprint(tag)
 			imp.tags = append(imp.tags, tagStr)
 		}
@@ -83,10 +91,26 @@ func (imp *operationImp) setTags(data api.Raw) {
 	sort.Strings(imp.tags)
 }
 
+// Resolve runs resolve on any of the contained schema which is also resolvable.
+// This will return nil since this isn't a schema to replace.
+func (imp *operationImp) Resolve(openAPI api.OpenAPI) api.Schema {
+	if res, ok := imp.requestBody.(api.Resolvable); ok {
+		imp.requestBody = res.Resolve(openAPI)
+	}
+
+	for _, resp := range imp.responses {
+		if res, ok := resp.(api.Resolvable); ok {
+			res.Resolve(openAPI)
+		}
+	}
+	return nil
+}
+
 func (imp *operationImp) OpType() operationType.Type        { return imp.opType }
 func (imp *operationImp) Summary() string                   { return imp.summary }
 func (imp *operationImp) Description() string               { return imp.description }
 func (imp *operationImp) OperationId() string               { return imp.operationId }
+func (imp *operationImp) RequestBody() api.Schema           { return imp.requestBody }
 func (imp *operationImp) ResponseCodes() []string           { return imp.responseCodes }
 func (imp *operationImp) Response(code string) api.Response { return imp.responses[code] }
 func (imp *operationImp) Tags() []string                    { return imp.tags }

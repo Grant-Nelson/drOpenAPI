@@ -14,19 +14,21 @@ const (
 
 // markdownImp is the implementation of the Markdown interface.
 type markdownImp struct {
-	factory markdown.Factory
-	title   string
-	index   markdown.Text
-	body    []markdown.Stringer
+	factory     markdown.Factory
+	title       string
+	prevSecName string
+	index       markdown.Text
+	body        []markdown.Stringer
 }
 
 // New creates a new Markdown instance.
 func New(factory markdown.Factory, title string) markdown.Markdown {
 	imp := &markdownImp{
-		factory: factory,
-		title:   title,
-		index:   factory.Text(),
-		body:    []markdown.Stringer{},
+		factory:     factory,
+		title:       title,
+		prevSecName: ``,
+		index:       factory.Text(),
+		body:        []markdown.Stringer{},
 	}
 	return imp
 }
@@ -35,12 +37,14 @@ func (imp *markdownImp) Section(name string) {
 	text := imp.factory.Text().Write("## %s", name)
 	imp.body = append(imp.body, text)
 	imp.index.Write(`- `).Ref(name, name).Write("\n")
+	imp.prevSecName = name
 }
 
 func (imp *markdownImp) Subsection(name string) {
 	text := imp.factory.Text().Write("### %s", name)
 	imp.body = append(imp.body, text)
-	imp.index.Write(`  - `).Ref(name, name).Write("\n")
+	indexText := strings.TrimPrefix(name, imp.prevSecName)
+	imp.index.Write(`  - `).Ref(indexText, name).Write("\n")
 }
 
 func (imp *markdownImp) Par() markdown.Text {

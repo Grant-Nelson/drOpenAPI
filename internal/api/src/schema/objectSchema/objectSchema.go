@@ -1,7 +1,6 @@
 package objectSchema
 
 import (
-	"fmt"
 	"sort"
 
 	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
@@ -31,8 +30,8 @@ func New(base api.Schema, factory api.Factory, data api.Raw) api.ObjectSchema {
 func (imp *objectImp) setProperties(factory api.Factory, data api.Raw) {
 	imp.propertyNames = []string{}
 	imp.properties = map[string]api.Schema{}
-	if properties, has := data[`properties`]; has {
-		for name, prop := range properties.(api.Raw) {
+	if properties, has := api.Get[api.Raw](data, `properties`); has {
+		for name, prop := range properties {
 			imp.propertyNames = append(imp.propertyNames, name)
 			imp.properties[name] = factory.Schema(name, prop.(api.Raw))
 		}
@@ -44,11 +43,8 @@ func (imp *objectImp) setProperties(factory api.Factory, data api.Raw) {
 // then sets them to the ObjectSchema implementation.
 func (imp *objectImp) setRequired(data api.Raw) {
 	imp.required = []string{}
-	if required, has := data[`required`]; has {
-		for _, req := range required.([]interface{}) {
-			reqStr := fmt.Sprint(req)
-			imp.required = append(imp.required, reqStr)
-		}
+	if required, has := api.Get[[]string](data, `required`); has {
+		imp.required = required
 	}
 	sort.Strings(imp.required)
 }

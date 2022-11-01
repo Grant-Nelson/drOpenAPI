@@ -16,7 +16,7 @@ import (
 
 // unmarshalHandle is a function signature for a tool to parse
 // the given file's data into the object representation of that data.
-type unmarshalHandle func(in []byte, out interface{}) error
+type unmarshalHandle func(in []byte, out any) error
 
 // Read will open the given file and convert it into an OpenAPI object.
 // The given fileType overrides the file path extension, when not empty,
