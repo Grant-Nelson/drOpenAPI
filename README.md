@@ -16,20 +16,47 @@ The paths must have a `application/json` media type to be shown.
 ## Setup
 
 - Setup [Go v1.19 or later](https://go.dev/dl/)
-- Clone with `go get github.com/Grant-Nelson/DrOpenAPI`
+- Clone with `go get github.com/Grant-Nelson/drOpenAPI`
 
 ## Run from this folder
 
-- Generate MD with `go run main.go -i <input> -o <output>`
-- For help run `go run main.go -h`
+- Run with `go run main.go <config>`
 
 ## Installing to use anywhere
 
 - Install with `go install`
-- Generate MD with `DrOpenAPI -i <input> -o <output>`
-- For help run `DrOpenAPI -h`
+- Run with `drOpenAPI <config>`
 
-## Customize Markdown
+## Config files
 
-- To change the title on the MD file, add a `-t <title>` argument.
-  For example `-t "Title for MD file"`
+When running Dr OpenAPI a config YAML or JSON file may be passed in.
+If no config file is passed in as an argument,
+then `./drOpenAPI.yaml` or `./drOpenAPI.json` is used.
+
+The config file may have the following values:
+
+### Input
+
+The config file may have an `input` file path defined.
+The input file can be a YAML or JSON file.
+If no input file is given then `./bundle.yaml` or `./bundle.json` is used.
+
+```Yaml
+input: ./your_bundle_file.yaml
+```
+
+### Output
+
+The config file may have zero or more `outputs`.
+If no outputs are given then the resulting file will have all of
+paths and be written to the input path with the extension changed to `.md`.
+
+```Yaml
+outputs:
+  - path: ./created_markdown_file.md
+    title: Custom title to put at top of file
+    paths:
+      - path: ./
+        ops:  get
+        code: 200
+```
