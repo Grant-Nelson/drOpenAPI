@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown"
+	"github.com/Grant-Nelson/drOpenAPI/internal/markdown"
 )
 
 // stringBufferImp is the implementation of the StringBuffer interface.

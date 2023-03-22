@@ -3,7 +3,7 @@ package class
 import (
 	"fmt"
 
-	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown"
+	"github.com/Grant-Nelson/drOpenAPI/internal/markdown"
 )
 
 // classImp is the implementation of the Class interface.

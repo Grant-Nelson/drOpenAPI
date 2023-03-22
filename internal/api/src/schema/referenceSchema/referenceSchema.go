@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/schemaType"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/stateType"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api/enums/schemaType"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api/enums/stateType"
 )
 
 const refPrefix = `#/components/schemas/`

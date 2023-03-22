@@ -1,12 +1,12 @@
 package factory
 
 import (
-	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown/src/class"
-	srcMD "github.com/Grant-Nelson/DrOpenAPI/internal/markdown/src/markdown"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown/src/mermaid"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown/src/stringBuffer"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown/src/text"
+	"github.com/Grant-Nelson/drOpenAPI/internal/markdown"
+	"github.com/Grant-Nelson/drOpenAPI/internal/markdown/src/class"
+	srcMD "github.com/Grant-Nelson/drOpenAPI/internal/markdown/src/markdown"
+	"github.com/Grant-Nelson/drOpenAPI/internal/markdown/src/mermaid"
+	"github.com/Grant-Nelson/drOpenAPI/internal/markdown/src/stringBuffer"
+	"github.com/Grant-Nelson/drOpenAPI/internal/markdown/src/text"
 )
 
 // factory is the implementation of the Factory interface.

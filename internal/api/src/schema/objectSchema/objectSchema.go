@@ -3,7 +3,7 @@ package objectSchema
 import (
 	"sort"
 
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api"
 )
 
 // objectImp is the implementation of the ObjectSchema interface.

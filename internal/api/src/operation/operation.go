@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/operationType"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api/enums/operationType"
 )
 
 // operationImp is the implementation of the Operation interface.

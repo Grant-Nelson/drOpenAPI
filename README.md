@@ -26,8 +26,8 @@ The paths must have a `application/json` media type to be shown.
 
 - Install with `go install`
 - Run with `drOpenAPI <config>`
-
-## Config files
+drOpenAPI
+## Config filesdrOpenAPI
 
 When running Dr OpenAPI a config YAML or JSON file may be passed in.
 If no config file is passed in as an argument,

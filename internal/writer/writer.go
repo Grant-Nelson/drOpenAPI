@@ -5,11 +5,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/schemaType"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/stateType"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown/src/factory"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api/enums/schemaType"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api/enums/stateType"
+	"github.com/Grant-Nelson/drOpenAPI/internal/markdown"
+	"github.com/Grant-Nelson/drOpenAPI/internal/markdown/src/factory"
 )
 
 // Write creates or overwrites the given output path with the markdown

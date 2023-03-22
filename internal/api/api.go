@@ -1,10 +1,10 @@
 package api
 
 import (
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/compositeType"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/operationType"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/schemaType"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/stateType"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api/enums/compositeType"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api/enums/operationType"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api/enums/schemaType"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api/enums/stateType"
 )
 
 type (

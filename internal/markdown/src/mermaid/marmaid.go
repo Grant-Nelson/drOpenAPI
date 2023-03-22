@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown"
+	"github.com/Grant-Nelson/drOpenAPI/internal/markdown"
 )
 
 // mermaidImp is the implementation of the Mermaid interface.

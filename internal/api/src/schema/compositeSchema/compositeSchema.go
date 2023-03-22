@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api/enums/compositeType"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api/enums/compositeType"
 )
 
 // compositeImp is the implementation of the CompositeSchema interface.

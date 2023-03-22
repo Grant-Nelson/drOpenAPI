@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/Grant-Nelson/DrOpenAPI/internal/api"
+	"github.com/Grant-Nelson/drOpenAPI/internal/api"
 )
 
 // openAPIImp is the implementation of the OpenAPI interface.

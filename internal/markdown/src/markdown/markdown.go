@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Grant-Nelson/DrOpenAPI/internal/markdown"
+	"github.com/Grant-Nelson/drOpenAPI/internal/markdown"
 )
 
 const (
-	appName = `DrOpenAPI`
-	appPath = `https://github.com/Grant-Nelson/DrOpenAPI`
+	appName = `drOpenAPI`
+	appPath = `https://github.com/Grant-Nelson/drOpenAPI`
 )
 
 // markdownImp is the implementation of the Markdown interface.
